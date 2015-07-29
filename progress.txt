@@ -1,0 +1,841 @@
+PROJ 3
+progress
+
+ROTATE LEFT OLD
+
+	private void rotateLeft(RedBlackNode<AnyType> parent){ //same as left, but opposite direction
+		
+		//q.left = p
+		//p.right = original q.left
+		RedBlackNode<AnyType> child = parent.right;
+		if (child==null) return;
+		
+		//making new root
+		if(parent.parent==null)
+			root = child;
+		else if(parent == parent.parent.left) //left child
+			parent.parent.left = child;
+		else //right child
+			parent.parent.right = child;
+		
+		//replace parent's right with child's left
+		parent.right = child.left;
+		//parent becomes child's left
+		child.left = parent;
+		
+	}
+
+******************
+
+ROTATE LEFT NEW
+
+******************
+
+ROTATE RIGHT OLD
+
+	private void rotateRight(RedBlackNode<AnyType> parent){ //pass parent/grandparent node!
+		
+		//q.left = p
+		//p.right = original q.left
+		RedBlackNode<AnyType> child = parent.left;
+		
+		if (child == null) return; //nothing to do
+		
+		
+		if (parent.parent == null)
+			root = child;
+		else if (parent == parent.parent.left) //parent is grandparent's left child
+			parent.parent.left = child;
+		else //parent if grandparent's right child
+			parent.parent.right = child;
+
+		//replace parent's left with child's right
+		parent.left = child.right;
+		//parent becomes child's right 
+		child.right = parent;
+	}
+
+
+********************
+
+ROTATE RIGHT NEW
+		//q.left = p
+		//p.right = original q.left
+		RedBlackNode<AnyType> child = parent.left;
+
+		if (parent.parent == null)
+			root = child;
+		else {
+			if (parent == parent.parent.left)
+				//parent is grandparent's left child
+				parent.parent.left = child;
+			else
+				//parent if grandparent's right child
+				parent.parent.right = child;}
+		
+		if (child!=null)
+			child.parent = parent.parent;
+		
+		//replace parent's left with child's right
+		parent.left = child.right;
+		
+		if(child.right!=null)
+			child.right.parent = parent;
+		
+		child.right = parent;
+		//parent becomes child's right 
+		child.right = parent;
+
+********************
+
+//	public void insert(AnyType item) {
+//	    RedBlackNode<AnyType> newNode = new RedBlackNode<AnyType>(item);
+//	    if (root == null){
+//	        root = newNode;
+//	    }
+//	    else{
+//	        RedBlackNode<AnyType> temp = root; //call recurisve after this
+//	        while (true) {
+//	            int compResult =item.compareTo(temp.getElement());
+//	            if (compResult == 0) {
+//	                temp = newNode;
+//	                return;
+//	            } else if (compResult < 0) {
+//	                if (temp.left == null) {
+//	                    temp.left = newNode;
+//	                    break;
+//	                } else {
+//	                    temp = temp.left;
+//	                }
+//	            } else {
+//	                assert compResult > 0;
+//	                if (temp.right == null) {
+//	                    temp.right = newNode;
+//	                    break;
+//	                } else {
+//	                    temp = temp.right;
+//	                }
+//	            }
+//	        }
+//	        newNode.parent = temp;
+//	    }
+//	    insert0(newNode);
+//	}
+
+
+****************
+
+//	//Working recursive, but every node considered root
+//	public void insert(AnyType x){
+//		
+//		RedBlackNode<AnyType> newNode = new RedBlackNode<AnyType>(x);
+//		
+//		if (root == null){
+//			root = newNode;}
+//		else{
+//			newNode = treeInsert(newNode, root, null);
+//		}
+//	}
+//
+//	private RedBlackNode<AnyType> treeInsert(RedBlackNode<AnyType> newNode, RedBlackNode<AnyType> current, RedBlackNode<AnyType> parent){
+//		if (current==null){
+//			newNode.parent = parent;
+//			return newNode;
+//		}
+//
+//		int compare = newNode.getElement().compareTo(current.getElement());
+//
+//		if (compare < 0)
+//			current.left = treeInsert(newNode, current.left, current);
+//		else if (compare > 0)
+//			current.right = treeInsert(newNode, current.right, current);
+//
+//		return current;
+//	}
+
+********
+Insert
+********
+
+	private RedBlackNode<AnyType> treeInsert(RedBlackNode<AnyType> x, RedBlackNode<AnyType> item, RedBlackNode<AnyType> parent){
+//	private RedBlackNode<AnyType> treeInsert(AnyType x, RedBlackNode<AnyType> item, RedBlackNode<AnyType> parent){
+		if (item==null){
+			return x;
+			//return new RedBlackNode<AnyType>(x, null, null, parent);
+		}
+
+		int compare = x.getElement().compareTo(item.getElement());
+
+		if (compare < 0)
+			item.left = treeInsert(x, item.left, item);
+		else if (compare > 0)
+			item.right = treeInsert(x, item.right, item);
+
+		return item;
+	}
+
+*********
+Insert
+*********
+
+	public void insert(AnyType x){
+		System.out.println("****"+root);
+		RedBlackNode<AnyType> newNode = new RedBlackNode<AnyType>(x);
+		
+		root = treeInsert(newNode, root, root);
+		
+		newNode.makeRed();
+		//fixEverything(newNode);
+	}
+
+	private RedBlackNode<AnyType> treeInsert(RedBlackNode<AnyType> x, RedBlackNode<AnyType> item, RedBlackNode<AnyType> parent){
+		if (item==null){
+			x.parent = parent;
+			return x;
+		}
+
+		int compare = x.getElement().compareTo(item.getElement());
+
+		if (compare < 0)
+			item.left = treeInsert(x, item.left, item);
+		else if (compare > 0)
+			item.right = treeInsert(x, item.right, item);
+
+		return item;
+	}
+
+
+*********
+Insert
+*********
+	public void insert(AnyType x){
+		//root = treeInsert(x, root, root);
+		System.out.println("****"+root);
+		RedBlackNode<AnyType> newNode = new RedBlackNode<AnyType>(x);
+		root = treeInsert(newNode, root, root);
+		//node.color.makeRed();
+		//fixEverything(node);
+		
+//		RedBlackNode<AnyType> newNode = treeInsert(x, root, root);
+		newNode.makeRed();
+//		if (root == null)
+//			root = newNode;
+		fixEverything(newNode);
+	}
+
+	private RedBlackNode<AnyType> treeInsert(RedBlackNode<AnyType> x, RedBlackNode<AnyType> item, RedBlackNode<AnyType> parent){
+//	private RedBlackNode<AnyType> treeInsert(AnyType x, RedBlackNode<AnyType> item, RedBlackNode<AnyType> parent){
+		if (item==null){
+			return x;
+			//return new RedBlackNode<AnyType>(x, null, null, parent);
+		}
+
+		int compare = x.getElement().compareTo(item.getElement());
+
+		if (compare < 0)
+			item.left = treeInsert(x, item.left, item);
+		else if (compare > 0)
+			item.right = treeInsert(x, item.right, item);
+
+		return item;
+	}
+
+
+**************
+RB insert
+**************
+  /**
+     * Adds a single data item to the tree. If there is already an item in the
+     * tree that compares equal to the item being inserted, it is "overwritten"
+     * by the new item. Overrides BinarySearchTree.add because the tree needs to
+     * be adjusted after insertion.
+     */
+    public void add(Object data) {
+        if (root == null) {
+            root = new Node(data);
+        }
+        BinaryTreeNode n = root;
+        while (true) {
+            int comparisonResult = compare(data, n.getData());
+            if (comparisonResult == 0) {
+                n.setData(data);
+                return;
+            } else if (comparisonResult < 0) {
+                if (n.getLeft() == null) {
+                    n.setLeft(new Node(data));
+                    adjustAfterInsertion((Node) n.getLeft());
+                    break;
+                }
+                n = n.getLeft();
+            } else { // comparisonResult > 0
+                if (n.getRight() == null) {
+                    n.setRight(new Node(data));
+                    adjustAfterInsertion((Node) n.getRight());
+                    break;
+                }
+                n = n.getRight();
+            }
+        }
+    }
+
+***************
+FIX
+***************
+ /**
+     * Classic algorithm for fixing up a tree after inserting a node.
+     */
+    private void adjustAfterInsertion(Node n) {
+        // Step 1: color the node red
+        setColor(n, Color.red);
+
+        // Step 2: Correct double red problems, if they exist
+        if (n != null && n != root && isRed(parentOf(n))) {
+
+            // Step 2a (simplest): Recolor, and move up to see if more work
+            // needed
+            if (isRed(siblingOf(parentOf(n)))) {
+                setColor(parentOf(n), Color.black);
+                setColor(siblingOf(parentOf(n)), Color.black);
+                setColor(grandparentOf(n), Color.red);
+                adjustAfterInsertion(grandparentOf(n));
+            }
+
+            // Step 2b: Restructure for a parent who is the left child of the
+            // grandparent. This will require a single right rotation if n is
+            // also
+            // a left child, or a left-right rotation otherwise.
+            else if (parentOf(n) == leftOf(grandparentOf(n))) {
+                if (n == rightOf(parentOf(n))) {
+                    rotateLeft(n = parentOf(n));
+                }
+                setColor(parentOf(n), Color.black);
+                setColor(grandparentOf(n), Color.red);
+                rotateRight(grandparentOf(n));
+            }
+
+            // Step 2c: Restructure for a parent who is the right child of the
+            // grandparent. This will require a single left rotation if n is
+            // also
+            // a right child, or a right-left rotation otherwise.
+            else if (parentOf(n) == rightOf(grandparentOf(n))) {
+                if (n == leftOf(parentOf(n))) {
+                    rotateRight(n = parentOf(n));
+                }
+                setColor(parentOf(n), Color.black);
+                setColor(grandparentOf(n), Color.red);
+                rotateLeft(grandparentOf(n));
+            }
+        }
+
+        // Step 3: Color the root black
+        setColor((Node) root, Color.black);
+    }
+
+********************
+ROTATES
+********************
+    /**
+     * Rotates left around the given node.
+     */
+    protected void rotateLeft(BinaryTreeNode<E> n) {
+        if (n.getRight() == null) {
+            return;
+        }
+        BinaryTreeNode<E> oldRight = n.getRight();
+        n.setRight(oldRight.getLeft());
+        if (n.getParent() == null) {
+            root = oldRight;
+        } else if (n.getParent().getLeft() == n) {
+            n.getParent().setLeft(oldRight);
+        } else {
+            n.getParent().setRight(oldRight);
+        }
+        oldRight.setLeft(n);
+    }
+
+    /**
+     * Rotates right around the given node.
+     */
+    protected void rotateRight(BinaryTreeNode<E> n) {
+        if (n.getLeft() == null) {
+            return;
+        }
+        BinaryTreeNode<E> oldLeft = n.getLeft();
+        n.setLeft(oldLeft.getRight());
+        if (n.getParent() == null) {
+            root = oldLeft;
+        } else if (n.getParent().getLeft() == n) {
+            n.getParent().setLeft(oldLeft);
+        } else {
+            n.getParent().setRight(oldLeft);
+        }
+        oldLeft.setRight(n);
+    }
+
+
+REDBLACKTREE
+***************************
+package proj3;
+
+public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
+
+	RedBlackNode<AnyType> root;
+
+	public RedBlackTree(){
+		root = null;
+	}
+
+
+	public void insert(AnyType x){
+		// added this
+		if (root == null){
+			root = new RedBlackNode<AnyType>(x);
+			root.makeBlack();
+		}
+		else{
+//			insert(x, root, root);
+			RedBlackNode<AnyType> nodeToInsert = insert(x, root, root);
+			case0(nodeToInsert);
+		}
+
+	}
+
+	public RedBlackNode<AnyType> getRoot(){
+		return root;
+	}
+
+	private RedBlackNode<AnyType> insert(AnyType x, RedBlackNode<AnyType> item, RedBlackNode<AnyType> parent){
+		if (item==null){
+			return new RedBlackNode<AnyType>(x, null, null, parent); //make insert case 0 in bootstrap method
+		}
+
+		int compare = x.compareTo(item.getElement());
+
+		if (compare < 0)
+			item.left = insert(x, item.left, item);
+		else if (compare > 0)
+			item.right = insert(x, item.right, item);
+
+		return item;
+	}
+
+
+	//****INSERTION CASES****
+
+	//case 0: new node is root; color black
+	private void case0(RedBlackNode<AnyType> x){
+		if (x.parent == null)
+			x.makeBlack();
+		else
+			case1(x);
+	}
+
+	//case 1: black parent, this is ok
+	private void case1(RedBlackNode<AnyType> x){
+		if (x.parent.isBlack()){
+			x.makeRed();
+			return;
+			}
+		else
+			case2(x);
+	}
+
+	//case 2: red parent and uncle
+	private void case2(RedBlackNode<AnyType> x){
+		if (x.parent.isRed() && x.uncle().isRed()){
+			x.parent.makeBlack();
+			x.uncle().makeBlack();
+			x.grandparent().makeRed();
+			//recurse!!
+			case0(x.grandparent());
+		}
+		else
+			case3(x);
+	}
+
+	//case 3: red parent, black uncle
+	//			zig zag
+	//make into zig zig so I can call last case
+	private void case3(RedBlackNode<AnyType> x){
+		//left child of right
+		if (x == x.parent.left && x.parent == x.grandparent().right){
+			//Recolor
+			//color grandparent red
+			x.grandparent().makeRed();
+			//color x black
+			x.grandparent().makeBlack();
+
+			//Rotations
+			//rotate left on parent
+			rotateLeft(x.parent);
+
+			//rotate right on grandparent done in case 4
+
+		}
+		else if (x == x.parent.right && x.parent == x.grandparent().left){
+			//Recolor
+			//color grandparent red
+			x.grandparent().makeRed();
+			//color x black
+			x.makeBlack();
+
+			//Rotations
+			//rotate right on parent
+			rotateRight(x.parent);
+			
+			//rotate left on grandparent done in case 4
+
+		}
+		case4(x);
+
+	}
+
+	//case 4: red parent, black uncle
+	//			zig zig
+	private void case4(RedBlackNode<AnyType> x){
+		if (x == x.parent.left && x.parent == x.grandparent().left){
+			//Recolor
+			//color grandparent red
+			x.grandparent().makeRed();
+			//color parent black
+			x.parent.makeBlack();
+
+			//Rotations
+			//rotate parent right on grandparent
+			rotateRight(x.grandparent());
+
+		}
+		else if(x == x.parent.right && x.parent == x.grandparent().right){
+			//Recolor
+			//color grandparent red
+			x.grandparent().makeRed();
+			//color parent black
+			x.parent.makeBlack();
+
+			//Rotations
+			//rotate parent left on grandparent
+			rotateLeft(x.grandparent());
+
+		}
+	}
+
+	//****ROTATIONS****
+	private void rotateRight(RedBlackNode<AnyType> x){
+		//q.left = p
+		//p.right = original q.left
+		//parent and grandparent pointers?
+		//reset uncle
+		RedBlackNode<AnyType> leftNode = x.right;
+		swap(x, leftNode);
+		if (leftNode.left!=null)
+			leftNode.left.parent = x;
+		leftNode.left = x;
+		x.parent = leftNode;
+	}
+
+	private void rotateLeft(RedBlackNode<AnyType> x){
+		//q.left = p
+		//p.right = original q.left
+		RedBlackNode<AnyType> rightNode = x.right;
+		swap(x, rightNode);
+		if (rightNode.left!=null)
+			rightNode.left.parent = x;
+		rightNode.left = x;
+		x.parent = rightNode;
+	}
+
+	private void swap(RedBlackNode<AnyType> oldNode, RedBlackNode<AnyType> newNode){
+		if (oldNode.parent == null)
+			root = newNode;
+		else{
+			if (oldNode == oldNode.parent.left)
+				oldNode.parent.left = newNode;
+			else
+				oldNode.parent.right = newNode;
+		}
+
+		if (newNode != null)
+			newNode.parent = oldNode.parent;
+	}
+
+
+	public void printRoot() {
+		if (root!=null)
+			System.out.print("This tree starts with " + root.getElement());
+		else
+			System.out.println("This tree has no nodes");
+	}
+
+
+	public void printTree(){
+		printTree(root);
+	}
+
+	private void printTree(RedBlackNode<AnyType> t){
+		if (t.left!=null) printTree(t.left);
+		if (t!=null) System.out.print(t.getElement() + "\n");
+		if (t.right!=null) printTree(t.right);
+	}
+
+
+	//***WORKED HERE***
+	public AnyType retreiveIfItContains(AnyType item) {
+		if (item == null)
+			return null;
+		else if (this.root == null)
+			return null;
+		//Ok to call recursive function
+		else
+			return retrieveIfItContains(root, item);
+	}
+
+	private AnyType retrieveIfItContains(RedBlackNode<AnyType> aRoot, AnyType item){
+		//Reached a leaf, no match found
+		if (aRoot == null)
+			return null;
+
+		int compareTo = item.compareTo(aRoot.getElement());
+
+		if (compareTo < 0)
+			return retrieveIfItContains(aRoot.left, item);
+		else if (compareTo > 0)
+			return retrieveIfItContains(aRoot.right, item);
+		//Match found
+		else
+			return item;
+	}
+
+	public String toString(){
+		if (root!=null)
+			return "This tree starts with " + root.getElement();
+		else
+			return "This tree has no nodes";
+	}
+	
+		
+//	public static void main(String[] args) {
+//	    RedBlackTree<Partial> aTree = new RedBlackTree<Partial>();
+//	    
+//	    Node node1 = new Node("A",4);
+//	    Partial partial1 = new Partial(node1);
+//	    aTree.insert(partial1);
+//	    
+//	    Node node2 = new Node("Activate",1);
+//	    Partial partial2 = new Partial(node2);
+//	    aTree.insert(partial2);
+//	    
+//	    Node node3 = new Node("An", 1);
+//	    Partial partial3 = new Partial(node3);
+//	    aTree.insert(partial3);
+//
+//	    Node node4 = new Node("Another", 2);
+//	    partial3.insertNodeIntoHeap(node4);
+//	    
+//	    Node node5 = new Node("Answer", 1);
+//	    partial3.insertNodeIntoHeap(node5);
+//	    
+//	    Node node6 = new Node("Arbitrary", 2);
+//	    Partial partial6 = new Partial(node6);
+//	    aTree.insert(partial6);
+//	    
+//	    Node node7 = new Node("Asked", 1);
+//	    Partial partial7 = new Partial(node7);
+//	    aTree.insert(partial7);
+//	    
+//	    Node node8 = new Node("Astericks", 1);
+//	    partial7.insertNodeIntoHeap(node8);
+//	    
+//	    aTree.printTree();
+//	    
+//	}
+}
+********************************
+
+		//if duplicate binary node element, insert node into partial heap somehow?
+		//check for existing partial first
+//		else {
+//			if ((x instanceof Partial) && (item.element instanceof Partial)){
+//				((Partial) item.element).insertNodeIntoHeap(new Node(( (Partial) x).matches.getMax().getWord(), ( (Partial) x).matches.getMax().getFrequency()));
+//				System.out.println(((Partial) item.element).matches.getMax().getWord());
+//				((Partial) item.element).matches.printHeap();
+//			}
+//		}
+
+
+
+MAX HEAP
+
+package proj3;
+
+public class MaxHeap<AnyType extends Comparable<? super AnyType>> {
+
+	private final int INITIAL_SIZE = 10;
+	private int size;
+	private AnyType[] heap;
+	
+	int x = 1;
+	
+	public MaxHeap(){
+		size = 0;
+		heap = (AnyType[]) new Comparable[INITIAL_SIZE];
+	}
+	
+	public void insert( AnyType x )
+    {
+    	  if( size == heap.length - 1 )
+             { growHeap( heap.length * 2 + 1 ); }
+
+        int hole = ++size;
+        for( heap[ 0 ] = x; x.compareTo( heap[ hole / 2 ] ) > 0; hole /= 2 )
+            { heap[ hole ] = heap[ hole / 2 ]; }
+
+        heap[ hole ] = x;
+    } 
+	
+//	public void insert(AnyType item) {
+//		System.out.println("\tInserting: " + item);
+//		//Reserve 0th index for sentinel value 
+//		if (size == heap.length - 1)
+//			{growHeap(heap.length*2+1);}
+//		
+//		//start comparing at end of heap
+//		int tempIndex = ++size;
+//		
+//		//Compare to Parent, at i/2; stop when tempIndex is at the "root"
+//		for(; tempIndex>1 && item.compareTo(heap[tempIndex/2]) > 0; tempIndex /= 2){
+//			
+//			//swap if less than parent
+//			heap[tempIndex] = heap[tempIndex/2];
+//		}
+//		
+//		//When place is found, insert item
+//		heap[tempIndex] = item;
+//		if(((Node) item).getWord().equals("Another")) {
+//			System.out.print("");
+//		}
+//		System.out.println("\t"+ heap[tempIndex] + " " + tempIndex);
+//		System.out.println("This is the print heap from in the function");
+//		printHeap();
+//	
+//	}
+
+	private void growHeap(int newSize) {
+		//Create alias
+		AnyType[] original = heap;
+		//Create new array of larger size
+		heap = (AnyType[]) new Comparable[newSize];
+		
+		//Copy values
+		System.arraycopy(original, 1, heap, 1, size);
+		
+	}
+
+	public boolean isEmpty() {
+		return (size==0);
+	}
+
+	public void printImmediateOptions() {
+		System.out.println(heap[1] 
+							+"\n"+ heap[2] 
+							+"\n"+ heap[3]);
+	}
+	
+	public AnyType getMax(){
+		return heap[1];
+	}
+	
+	//O(n)
+	public void printHeap(){
+
+		System.out.println(this.toString());
+	}
+
+	//O(n)
+	public String toString(){
+		if (isEmpty())
+			return "This heap is empty!\n";
+		String returnString="";
+		for (int i=1; i<=heap.length-1; i++)
+			returnString+= ("["+i+"] " + heap[i]+"\n");
+		return " --> The heap contains:\n" + returnString;
+	}
+	
+	//O(1)
+	public void printHeapRoot(){
+		if (isEmpty())
+			System.out.println("This heap is empty!\n");
+		else
+			System.out.println(heap[1]);
+	}
+	
+//	public static void main(String[] args){
+//		MaxHeap<Integer> testInt = new MaxHeap<Integer>();
+//		testInt.insert(new Integer(1));
+//		testInt.insert(new Integer(4));
+//		testInt.insert(new Integer(3));
+//		testInt.insert(new Integer(5));
+//		testInt.printRoot();
+//		
+//		MaxHeap<Node> test = new MaxHeap<Node>();
+//		test.insert(new Node("Hello",2));
+//		test.insert(new Node("What",1));
+//		test.printHeap();
+//		test.printImmediateOptions();
+//		test.insert(new Node("Apple",1));
+//		test.printHeap();
+//	}
+}
+
+	private void verifyTree(RedBlackNode<?> n) {
+		if (n == null) return;
+		
+		if (n.isRed()) {
+	        if(n.left!=null)System.out.println(n.left.isBlack());
+	        if(n.right!=null)System.out.println(n.right.isBlack());
+	        System.out.println(n.parent.isBlack());
+	    }
+		
+		if(n.left!=null)verifyTree(n.left);
+		if(n.right!=null)verifyTree(n.right);
+	}
+
+
+rb_insert( Tree T, node x ) {
+    /* Insert in the tree in the usual way */
+    tree_insert( T, x );
+    /* Now restore the red-black property */
+    x->colour = red;
+    while ( (x != T->root) && (x->parent->colour == red) ) {
+       if ( x->parent == x->parent->parent->left ) {
+           /* If x's parent is a left, y is x's right 'uncle' */
+           y = x->parent->parent->right;
+           if ( y->colour == red ) {
+               /* case 1 - change the colours */
+               x->parent->colour = black;
+               y->colour = black;
+               x->parent->parent->colour = red;
+               /* Move x up the tree */
+               x = x->parent->parent;
+               }
+           else {
+               /* y is a black node */
+               if ( x == x->parent->right ) {
+                   /* and x is to the right */ 
+                   /* case 2 - move x up and rotate */
+                   x = x->parent;
+                   left_rotate( T, x );
+                   }
+               /* case 3 */
+               x->parent->colour = black;
+               x->parent->parent->colour = red;
+               right_rotate( T, x->parent->parent );
+               }
+           }
+       else {
+           /* repeat the "if" part with right and left
+              exchanged */
+           }
+       }
+    /* Colour the root black */
+    T->root->colour = black;
+    }
